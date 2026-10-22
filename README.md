@@ -60,9 +60,5 @@ CRYPTANALYSIS is an English word whose index equals that of uniformly random let
 shortest text length at which you would trust this measurement, and how you decided.
 
 #### Answer: 
-The Index of Coincidence (\(\text{IC}\)) is defined as:
-$$
-\text{IC} = \frac{\sum_{i=A}^{Z} f_i (f_i - 1)}{N (N - 1)}
-$$
-For the word CRYPTANALYSIS (N = 13). IC = $6/156$
+For the word CRYPTANALYSIS (N = 13).$\text{IC} = \frac{6}{156} \approx 0.0385$
 
