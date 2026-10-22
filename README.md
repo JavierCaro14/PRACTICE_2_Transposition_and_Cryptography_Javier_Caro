@@ -46,9 +46,19 @@ python -c "import break_vigenere; key, plain = break_vigenere.attack('YOUR_CIPHE
 python -c "import break_columnar; order, plain = break_columnar.attack('YOUR_CIPHERTEXT_HERE', n_cols=5); print(f'Order: {order}\nPlain: {plain[:50]}...')"
 ```
 ## 2. Part A3: Padding and Double Transposition 
-Question --> In your report: that plaintext is 30 letters, and 30 is a multiple of both key lengths, so no padding is needed at either
+#### Question:
+In your report: that plaintext is 30 letters, and 30 is a multiple of both key lengths, so no padding is needed at either
 pass. Explain what your decrypt_double has to do differently when the plaintext length is not a multiple of both,
 and why a naive implementation returns garbage in that case.
 
-Answer --> 
+#### Answer:
+When the plaintext length N is not a multiple of both key lengths (k_1 and k_2), the first encryption pass appends padding characters to fill the matrix grid. Double transposition decryption requires reversing the process by first tracking the padded lengths (N_pad1 and N_pad2) because extra dummy characters are added during encryption. You must **reverse Pass 2 first** using Key 2 and N_pad2 to recover the intermediate text, and then **reverse Pass 1 second** using Key 1 and N_pad1 to reconstruct the original padded plaintext. A naive implementation fails because if it uses the original unpadded length (N) instead of N_pad1 for Pass 2, the grid dimensions become mismatched; this offsets the column boundaries, causing a domino effect where every subsequent character falls into the wrong position and turns the final message into unreadable garbage.
+
+## 3. Part B1: Minimum trustworthy length
+#### Question:
+CRYPTANALYSIS is an English word whose index equals that of uniformly random letters. State the
+shortest text length at which you would trust this measurement, and how you decided.
+
+#### Answer: 
+For the word CRYPTANALYSIS (N = 13). IC = 6/156
 
