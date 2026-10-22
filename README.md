@@ -60,5 +60,11 @@ CRYPTANALYSIS is an English word whose index equals that of uniformly random let
 shortest text length at which you would trust this measurement, and how you decided.
 
 #### Answer: 
-For the word CRYPTANALYSIS (N = 13).$\text{IC} = \frac{6}{156} \approx 0.0385$
+For short texts like CRYPTANALYSIS ($N = 13$) with an index of coincidence of $\text{IC} = \frac{6}{156}\approx 0.0385$, high sample variance makes the metric unreliable because a single repeated letter can heavily distort the calculation. Because the statistical variance of the Index of Coincidence decreases as the text gets longer, a trustworthy measurement requires a minimum length of $N \ge 60$ (ideally $N \ge 100$), ensuring the standard deviation drops low enough to reliably differentiate random noise from natural English.
+
+## 4. B2 Classifier
+The classifier distinguishes monoalphabetic substitution from transposition by measuring the length-normalized Chi-squared distance ($\chi^2 / N$) against English letter frequencies. 
+$$\chi^2 / N = \frac{1}{N} \sum_{c=A}^{Z} \frac{(f_c - N \cdot p_c)^2}{N \cdot p_c}$$
+### Measurement tables 
+#### Table B2.1: Constant Padding (pad="X") — Error Rates (%)
 
