@@ -60,5 +60,5 @@ CRYPTANALYSIS is an English word whose index equals that of uniformly random let
 shortest text length at which you would trust this measurement, and how you decided.
 
 #### Answer: 
-For the word CRYPTANALYSIS (N = 13). IC = 6/156
+For the word CRYPTANALYSIS (N = 13). IC = $6/156$
 
