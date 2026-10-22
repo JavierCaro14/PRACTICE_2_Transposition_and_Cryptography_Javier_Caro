@@ -65,6 +65,31 @@ For short texts like CRYPTANALYSIS ($N = 13$) with an index of coincidence of $\
 ## 4. B2 Classifier
 The classifier distinguishes monoalphabetic substitution from transposition by measuring the length-normalized Chi-squared distance ($\chi^2 / N$) against English letter frequencies. 
 $$\chi^2 / N = \frac{1}{N} \sum_{c=A}^{Z} \frac{(f_c - N \cdot p_c)^2}{N \cdot p_c}$$
+I chose a threshold of 0.035 becuase testing on sample texts shows that transposed English text usually has a score below 0.025, while substituted text usually has a score above 0.050. We chose 0.035 as the threshold to help distinguish between the two types of encryption.
 ### Measurement tables 
 #### Table B2.1: Constant Padding (pad="X") — Error Rates (%)
+| Ciphertext Length | Transposition Error Rate (%) | Substitution Error Rate (%) | Overall Classifier Error (%) |
+|-------------------|------------------------------|-----------------------------|------------------------------|
+| 60                | 12.0%                        | 4.0%                        | 8.0%                         |
+| 120               | 3.3%                         | 0.7%                        | 2.0%                         |
+| 250               | 0.0%                         | 0.0%                        | 0.0%                         |
+| 400               | 0.0%                         | 0.0%                        | 0.0%                         |
 
+#### Table B2.2: Random Language-Drawn Padding — Error Rates (%)
+| Ciphertext Length | Transposition Error Rate (%) | Substitution Error Rate (%) | Overall Classifier Error (%) |
+|-------------------|------------------------------|-----------------------------|------------------------------|
+| 60                | 2.7%                         | 1.3%                        | 2.0%                         |
+| 120               | 0.0%                         | 0.0%                        | 0.0%                         |
+| 250               | 0.0%                         | 0.0%                        | 0.0%                         |
+| 400               | 0.0%                         | 0.0%                        | 0.0%                         |
+
+#### Questions: 
+1. Working and Failure Lengths: The classifier works reliably for lengths $N \ge 120$ (< 2 % error). It fails most frequently at $N = 60$ due to high variance in short texts.
+2. Mechanism of Padding Impact: Appending constant 'X' characters skews the frequency distribution away from natural English, artificially increasing the $\chi^2 / N$ score of transpositions and causing false-positive substitution classifications. Drawing padding from natural language distributions preserves expected frequencies and eliminates this artifact.
+3. Adding padding characters like 'X' completely ruins the Chi-Squared frequency test because 'X' is normally extremely rare in English. For a 60-letter text, you would statistically expect almost zero 'X's (about 0.09), but adding just 6 padding 'X's spikes the actual count to 6.09. This massive discrepancy creates a huge mathematical jump in the Chi-Squared score (adding over 6 points to the metric), which is way above the detection threshold and completely distorts the results.
+4. Design Rule: When designing a cipher that requires padding, pad characters must be sampled randomly from the target language's natural letter distribution rather than using a constant character.
+
+## 5. Part B3: GCD
+In Kasiski examination, the ciphertext contains repeated substrings with distances of 15, 35, and 50, whose greatest common divisor (GCD) is 5. However, using only the GCD can be unreliable because a random repeat at a distance such as 17 could reduce the GCD to 1, hiding the correct key length. Instead, factor_tally counts how often each factor appears across all distances, making it more reliable when random repeats occur. Even if one distance is misleading, the factor 5 can still appear most often, helping identify the correct key length.
+
+## 6. Part C1: Key Length Determination
