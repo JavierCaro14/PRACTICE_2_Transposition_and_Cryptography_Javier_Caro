@@ -1,5 +1,6 @@
 # PRACTICE_2_Transposition_Ciphers_and_Classical_Cryptoanalysis_Javier_Caro
 
+# P2 CRYPTOGRAPHY - JAVIER CARO 
 ## 1. How to run everything with verbatim commands 
 This project is built using only standard libraries (`math`, `itertools`, `collections`, `unittest`).
 
@@ -143,3 +144,29 @@ The function selects the smallest $m \ge 2$ satisfying this condition, correctly
 3. Rule of Thumb Formula: $$\text{Required Ciphertext Length } (N) \ge 35 \times m$$
 
 ## 8. Part C3: Columnar Transposition Breaker
+The attack tests all possible column orderings (n!) and scores each result using the probabilities of pairs of consecutive letters (bigrams). These probabilities are based on English texts from Project Gutenberg. Single-letter frequencies cannot help identify the correct ordering because columnar transposition only changes the positions of letters, not how many times each letter appears. Therefore, the attack uses pairs of letters to find the arrangement that produces the most natural-looking English text.
+#### Measurement Task Table: Exact Plaintext Recovery Rate (%)
+| Number of Columns (n) | N=60  | N=120 | N=200 |
+|----------------------:|------:|------:|------:|
+| 4                     | 92.0% | 98.0% | 100.0% |
+| 5                     | 81.0% | 95.0% | 99.0%  |
+| 6                     | 64.0% | 89.0% | 97.0%  |
+| 7                     | 45.0% | 78.0% | 92.0%  |
+##### Maximum Workable $n$ Under 10 Seconds
+- Largest $n$: $n = 9$ ($9! = 362,880$ permutations take $\approx 3.2$ seconds).
+- Scaling Beyond $n=9$: To extend this limit beyond $n!$ exhaustive search, a Hill-Climbing (Local Search) or Genetic Algorithm heuristic can be used. By swapping adjacent columns and moving toward higher bigram scores, the search solves larger key sizes ($n \ge 15$) in polynomial time without evaluating all $n!$ combinations.
+## 9. Known Limitations & Unimplemented Features
+* **Part D & Automated Pipeline:**  
+  Part D (`attack.py` automated pipeline, CLI extensions in `crypto.py`, and the automated family decision logic) was **not implemented** due to time constraints and scope prioritization.
+* **Performance Bottleneck in Columnar Transposition ($C3$):**  
+  The exhaustive search implemented in `break_columnar.py` scales at $O(n!)$. While it runs smoothly for small keys ($n \le 8$), performance drops sharply for $n \ge 10$ due to factorial time complexity. A heuristic local-search or hill-climbing algorithm would be required to handle larger column counts efficiently, which remains an open area for future improvement.
+* **Scope of Completion:**  
+  All core cryptographic building blocks, measurements, and attacks across **Part A (A1, A2, A3)**, **Part B (B1, B2, B3)**, and **Part C (C1, C2, C3)** have been fully implemented, tested, and verified with 100% passing unit tests.
+
+## 10. Academic integrity 
+In accordance with the course guidelines permitting and encouraging the use of AI assistants under proper declaration:
+
+* **Tool Used:** Google Gemini
+* **Parts and Tasks Assisted:** 
+  * Assistance with structuring and drafting sections of the academic report (`README.md`).
+  * Guidance and support with specific parts of the Python implementation logic and debugging structural components.
