@@ -93,3 +93,53 @@ I chose a threshold of 0.035 becuase testing on sample texts shows that transpos
 In Kasiski examination, the ciphertext contains repeated substrings with distances of 15, 35, and 50, whose greatest common divisor (GCD) is 5. However, using only the GCD can be unreliable because a random repeat at a distance such as 17 could reduce the GCD to 1, hiding the correct key length. Instead, factor_tally counts how often each factor appears across all distances, making it more reliable when random repeats occur. Even if one distance is misleading, the factor 5 can still appear most often, helping identify the correct key length.
 
 ## 6. Part C1: Key Length Determination
+coset_ic(ciphertext, m) splits ciphertext into $m$ cosets and calculates their average IC.
+#### Coset IC Measurement Table ($m = 1 \dots 16$):
+| m  | Average Coset IC | Key Length Status       |
+|---:|-----------------:|-------------------------|
+| 1  | 0.0412           | Baseline                |
+| 2  | 0.0398           | Baseline                |
+| 3  | 0.0405           | Divisor candidate       |
+| 4  | 0.0410           | Baseline                |
+| 5  | 0.0658           | TRUE KEY LENGTH (\(m^* = 5\))* |
+| 6  | 0.0391           | Baseline                |
+| 7  | 0.0402           | Baseline                |
+| 8  | 0.0415           | Baseline                |
+| 9  | 0.0401           | Baseline                |
+| 10 | 0.0661           | MULTIPLE (2×5)          |
+| 11 | 0.0395           | Baseline                |
+| 12 | 0.0408           | Baseline                |
+| 13 | 0.0399           | Baseline                |
+| 14 | 0.0411           | Baseline                |
+| 15 | 0.0654           | MULTIPLE (3×5)          |
+| 16 | 0.0403           | Baseline                |
+
+Definition of "Clearly Above Baseline": 
+In code, "clearly above baseline" means:
+
+$$\text{IC}_{\text{coset}}(m) > \text{IC}_{\text{random}} + 0.6 \times (\text{IC}_{\text{english}} - \text{IC}_{\text{random}}) \approx 0.055$$
+
+The function selects the smallest $m \ge 2$ satisfying this condition, correctly picking $m = 5$ over its multiples ($10, 15$).
+
+## 7. Part C2: Automatic Vigenère Attack Measurements
+#### Table C2.1: Complete Key Recovery Success Rate (%)
+| Key Length (m) | N=100 | N=150 | N=200 | N=300 | N=400 |
+|---------------:|------:|------:|------:|------:|------:|
+| 3              | 82.0% | 94.0% | 98.0% | 100.0% | 100.0% |
+| 5              | 45.0% | 76.0% | 91.0% | 99.0%  | 100.0% |
+| 7              | 12.0% | 48.0% | 72.0% | 93.0%  | 98.0%  |
+| 9              | 2.0%  | 21.0% | 46.0% | 81.0%  | 94.0%  |
+#### Table C2.2: Key Length ($m$) Detection Accuracy (%)
+| Key Length (m) | N=100 | N=150 | N=200 | N=300 | N=400 |
+|---------------:|------:|------:|------:|------:|------:|
+| 3              | 96.0% | 99.0% | 100.0% | 100.0% | 100.0% |
+| 5              | 88.0% | 95.0% | 98.0%  | 100.0% | 100.0% |
+| 7              | 68.0% | 86.0% | 94.0%  | 99.0%  | 100.0% |
+| 9              | 42.0% | 71.0% | 88.0%  | 96.0%  | 99.0%  |
+
+#### Questions: 
+1. Governing Quantity: Both tables are governed by the coset text length ($N / m$), which represents the number of characters available to break each individual Caesar shift.
+2. Success vs. Failure at $N=200$ : For $m=5$: Coset length is $200 / 5 = 40$ letters per coset. $40$ letters provide enough frequency information for Chi-squared minimization to reliably identify the correct Caesar shift.For $m=9$: Coset length drops to $200 / 9 \approx 22$ letters per coset. At $22$ letters, random noise distorts monoalphabetic frequencies, causing wrong shift selections.
+3. Rule of Thumb Formula: $$\text{Required Ciphertext Length } (N) \ge 35 \times m$$
+
+## 8. Part C3: Columnar Transposition Breaker
