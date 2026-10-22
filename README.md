@@ -46,4 +46,9 @@ python -c "import break_vigenere; key, plain = break_vigenere.attack('YOUR_CIPHE
 python -c "import break_columnar; order, plain = break_columnar.attack('YOUR_CIPHERTEXT_HERE', n_cols=5); print(f'Order: {order}\nPlain: {plain[:50]}...')"
 ```
 ## 2. Part A3: Padding and Double Transposition 
+Question --> In your report: that plaintext is 30 letters, and 30 is a multiple of both key lengths, so no padding is needed at either
+pass. Explain what your decrypt_double has to do differently when the plaintext length is not a multiple of both,
+and why a naive implementation returns garbage in that case.
+
+Answer --> 
 
